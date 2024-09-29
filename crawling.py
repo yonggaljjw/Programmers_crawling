@@ -5,7 +5,7 @@ import sys
 import requests
 from bs4 import BeautifulSoup
 from markdownify import MarkdownConverter as MarkdownifyConverter
-
+import re
 
 class MarkdownConverter:
     _module_path = os.path.dirname(os.path.abspath(__file__))
@@ -35,8 +35,8 @@ class MarkdownConverter:
     def find_category_title(self):
         category_title_soup = self.soup.find("ol", "breadcrumb")
         _, category_soup, tilte_soup = category_title_soup.find_all("li")
-        category = category_soup.get_text()
-        title = tilte_soup.get_text()
+        category = re.sub(r'[<>:"/\\|?*]', '', category_soup.get_text())
+        title = re.sub(r'[<>:"/\\|?*]', '', tilte_soup.get_text())
         return category, title
 
     def make_dir(self, dir_name):
